@@ -1,0 +1,26 @@
+<h2>Dashboard</h2>
+
+<a href="/create">Create New Post</a>
+<a href="/logout">Logout</a>
+
+<hr>
+
+{% for post in posts %}
+
+<h3>{{post.title}}</h3>
+
+<p>{{post.author}}</p>
+
+<p>{{post.body}}</p>
+
+{% if post.image %}
+
+<img src="/static/uploads/{{post.image}}" width="200">
+
+{% endif %}
+
+<a href="/edit/{{post.id}}">Edit</a>
+
+<hr>
+
+{% endfor %}
