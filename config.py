@@ -11,26 +11,32 @@ class Config:
     # -----------------------------
     # Azure SQL Database
     # -----------------------------
-    server = os.environ.get("DB_SERVER")
-    database = os.environ.get("DB_NAME")
-    username = os.environ.get("DB_USER")
-    password = os.environ.get("DB_PASSWORD")
+    DB_SERVER = os.environ.get("DB_SERVER")
+    DB_NAME = os.environ.get("DB_NAME")
+    DB_USER = os.environ.get("DB_USER")
+    DB_PASSWORD = os.environ.get("DB_PASSWORD")
 
-    driver = "ODBC Driver 18 for SQL Server"
+    DRIVER = "ODBC Driver 18 for SQL Server"
 
-    params = urllib.parse.quote_plus(
-        f"DRIVER={driver};"
-        f"SERVER={server};"
-        f"PORT=1433;"
-        f"DATABASE={database};"
-        f"UID={username};"
-        f"PWD={password};"
-        "Encrypt=yes;"
-        "TrustServerCertificate=no;"
-        "Connection Timeout=30;"
-    )
+    # Build connection string safely
+    if DB_SERVER and DB_NAME and DB_USER and DB_PASSWORD:
+        params = urllib.parse.quote_plus(
+            f"DRIVER={DRIVER};"
+            f"SERVER={DB_SERVER};"
+            f"PORT=1433;"
+            f"DATABASE={DB_NAME};"
+            f"UID={DB_USER};"
+            f"PWD={DB_PASSWORD};"
+            "Encrypt=yes;"
+            "TrustServerCertificate=no;"
+            "Connection Timeout=30;"
+        )
 
-    SQLALCHEMY_DATABASE_URI = f"mssql+pyodbc:///?odbc_connect={params}"
+        SQLALCHEMY_DATABASE_URI = f"mssql+pyodbc:///?odbc_connect={params}"
+    else:
+        # Fallback (useful for local testing if DB not set)
+        SQLALCHEMY_DATABASE_URI = "sqlite:///local.db"
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # -----------------------------
@@ -40,17 +46,29 @@ class Config:
     CONTAINER_NAME = os.environ.get("CONTAINER_NAME", "postimages")
 
     # -----------------------------
-    # Azure AD Authentication
+    # Azure AD (Microsoft Login)
     # -----------------------------
     CLIENT_ID = os.environ.get("CLIENT_ID")
     CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
     TENANT_ID = os.environ.get("TENANT_ID")
 
-    AUTHORITY = f"https://login.microsoftonline.com/{TENANT_ID}"
+    AUTHORITY = (
+        f"https://login.microsoftonline.com/{TENANT_ID}"
+        if TENANT_ID else None
+    )
+
     REDIRECT_PATH = "/getAToken"
     SCOPE = ["User.Read"]
 
     # -----------------------------
-    # Azure Website URL
+    # Base URL (IMPORTANT for Azure)
     # -----------------------------
-    BASE_URL = os.environ.get("BASE_URL")
+    BASE_URL = os.environ.get(
+        "BASE_URL",
+        "http://127.0.0.1:5000"  # default for local
+    )
+
+    # -----------------------------
+    # Debug Mode (optional)
+    # -----------------------------
+    DEBUG = os.environ.get("DEBUG", "False") == "True"
