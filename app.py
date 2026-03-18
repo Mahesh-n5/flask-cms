@@ -15,14 +15,17 @@ from config import Config
 load_dotenv()
 
 # ---------------------------
+# Logging Configuration
+# ---------------------------
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
+# ---------------------------
 # Flask App Setup
 # ---------------------------
 app = Flask(__name__)
 app.config.from_object(Config)
 
-app.secret_key = app.config["SECRET_KEY"]
-
-logging.basicConfig(level=logging.INFO)
+app.secret_key = os.environ.get("SECRET_KEY")
 
 # ---------------------------
 # Database
@@ -36,12 +39,12 @@ blob_service_client = None
 container_client = None
 
 try:
-    connection_string = app.config.get("AZURE_STORAGE_CONNECTION_STRING")
+    connection_string = os.environ.get("AZURE_STORAGE_CONNECTION_STRING")
 
     if connection_string:
         blob_service_client = BlobServiceClient.from_connection_string(connection_string)
         container_client = blob_service_client.get_container_client(
-            app.config.get("CONTAINER_NAME")
+            os.environ.get("CONTAINER_NAME")
         )
         logging.info("Azure Blob Storage connected successfully")
     else:
@@ -113,7 +116,7 @@ def register():
             db.session.add(user)
             db.session.commit()
 
-            logging.info("User registered successfully")
+            logging.info(f"USER REGISTERED: {username}")
             return redirect(url_for("login"))
 
         except Exception as e:
@@ -123,7 +126,7 @@ def register():
     return render_template("register.html")
 
 # ---------------------------
-# Login
+# Login (UPDATED WITH LOGS)
 # ---------------------------
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -137,8 +140,11 @@ def login():
             if user and check_password_hash(user.password_hash, password):
                 session["user_id"] = user.id
                 session["username"] = user.username
+
+                logging.info(f"SUCCESS LOGIN: {username} | IP: {request.remote_addr}")
                 return redirect(url_for("index"))
 
+            logging.warning(f"FAILED LOGIN: {username} | IP: {request.remote_addr}")
             return "Invalid username or password"
 
         except Exception as e:
@@ -152,7 +158,10 @@ def login():
 # ---------------------------
 @app.route("/logout")
 def logout():
+    username = session.get("username", "Unknown")
     session.clear()
+
+    logging.info(f"USER LOGOUT: {username}")
     return redirect(url_for("login"))
 
 # ---------------------------
@@ -195,7 +204,7 @@ def create_post():
         db.session.add(post)
         db.session.commit()
 
-        logging.info("Post created successfully")
+        logging.info(f"POST CREATED by {session.get('username')}")
 
     except Exception as e:
         logging.error(f"Post creation error: {e}")
