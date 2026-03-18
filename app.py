@@ -8,6 +8,7 @@ import logging
 import os
 from datetime import datetime
 from config import Config
+import msal
 
 # ---------------------------
 # Load environment variables
