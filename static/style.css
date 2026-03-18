@@ -1,37 +1,58 @@
+/* -----------------------------
+   Global Styles
+----------------------------- */
 body {
     font-family: Arial, sans-serif;
     background: #f4f4f4;
     margin: 0;
     padding: 0;
-    text-align: left; /* Changed from center to align labels properly */
+    text-align: left;
 }
 
-/* Header Section */
+/* -----------------------------
+   Sticky Header (NEW 🔥)
+----------------------------- */
 .header-bar {
     background: #222;
     color: white;
     padding: 15px 50px;
     font-size: 18px;
+
+    position: fixed;     /* 🔥 makes it sticky */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-/* Alert Message */
+/* -----------------------------
+   Content spacing (IMPORTANT)
+----------------------------- */
+.alert-box,
+.form-box {
+    margin-left: 50px;
+}
+
 .alert-box {
     background-color: #d9edf7;
     color: #31708f;
     padding: 15px;
-    margin: 20px 50px;
+    margin-top: 90px;   /* 🔥 prevents overlap with fixed header */
     border: 1px solid #bce8f1;
     border-radius: 4px;
 }
 
-/* Form Container */
+/* -----------------------------
+   Form Container
+----------------------------- */
 .form-box {
     width: 350px;
-    margin-left: 50px; /* Aligned to the left as per image */
     margin-top: 20px;
-    background: transparent; /* Changed to match image background */
+    background: transparent;
     padding: 0;
-    box-shadow: none; /* Removed shadow to match minimalist image */
+    box-shadow: none;
 }
 
 .sign-in-title {
@@ -40,13 +61,17 @@ body {
     font-weight: normal;
 }
 
+/* -----------------------------
+   Inputs
+----------------------------- */
 .input-label {
     display: block;
     font-weight: bold;
     margin-top: 10px;
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"],
+input[type="password"] {
     width: 100%;
     padding: 8px;
     margin: 5px 0 15px 0;
@@ -54,6 +79,9 @@ input[type="text"], input[type="password"] {
     box-sizing: border-box;
 }
 
+/* -----------------------------
+   Remember Me
+----------------------------- */
 .remember-me {
     margin-bottom: 15px;
     font-size: 14px;
@@ -64,32 +92,46 @@ input[type="text"], input[type="password"] {
     margin-right: 5px;
 }
 
-/* Primary Sign In Button */
+/* -----------------------------
+   Primary Button
+----------------------------- */
 .btn-signin {
     background: white;
     color: black;
     border: 1px solid #333;
-    padding: 5px 15px;
-    width: auto;
+    padding: 6px 15px;
     cursor: pointer;
 }
 
-/* Divider Section */
+/* -----------------------------
+   Divider
+----------------------------- */
 .divider {
     margin: 20px 0;
-    font-size: 24px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-/* Microsoft Button Styling */
+.divider hr {
+    flex: 1;
+}
+
+/* -----------------------------
+   Microsoft Button (Improved)
+----------------------------- */
 .microsoft-btn {
     background: #2f2f2f;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 10px 15px;
     display: flex;
     align-items: center;
     cursor: pointer;
     font-size: 14px;
+    text-decoration: none;  /* for <a> tag */
+    width: fit-content;
 }
 
 .microsoft-btn img {
@@ -99,11 +141,45 @@ input[type="text"], input[type="password"] {
     padding: 2px;
 }
 
+/* -----------------------------
+   Register Link
+----------------------------- */
 .register-link {
     margin-top: 20px;
 }
 
-/* Keep your original hover logic */
-button:hover {
+/* -----------------------------
+   Hover Effects
+----------------------------- */
+button:hover,
+.microsoft-btn:hover {
     opacity: 0.8;
+}
+
+/* -----------------------------
+   Dashboard / Index Page Fix
+----------------------------- */
+.navbar {
+    background: #222;
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+
+    position: fixed;   /* 🔥 sticky navbar */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+}
+
+/* Prevent overlap in index page */
+.container {
+    margin: 30px;
+    margin-top: 80px;   /* 🔥 important */
 }
