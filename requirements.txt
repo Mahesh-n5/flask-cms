@@ -4,3 +4,4 @@ Flask-SQLAlchemy
 pyodbc
 azure-storage-blob
 python-dotenv
+msal
